@@ -2,8 +2,8 @@
 <html lang="hi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>YASHU PUDO - 45 Parts 4G Ultra Watch Architecture</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>YASHU PUDO - 4G Ultra Watch 45 Hardware Architecture Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800;900&family=Rajdhani:wght@600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
@@ -15,7 +15,9 @@
       --gold: #ffb703;
       --cyan: #00f0ff;
       --green: #10b981;
+      --purple: #a855f7;
       --text: #e2e8f0;
+      --panel-border: #13334d;
     }
 
     * {
@@ -32,7 +34,7 @@
       font-family: 'Rajdhani', sans-serif;
       min-height: 100vh;
       overflow-x: hidden;
-      padding: 10px 14px 20px 14px;
+      padding: 10px 14px 40px 14px;
     }
 
     header {
@@ -40,10 +42,11 @@
       justify-content: space-between;
       align-items: center;
       padding-bottom: 8px;
+      border-bottom: 1px solid var(--panel-border);
     }
     .main-logo {
       font-family: 'Orbitron', sans-serif;
-      font-size: 30px;
+      font-size: 28px;
       font-weight: 900;
       background: linear-gradient(180deg, #ffffff 10%, var(--orange) 80%);
       -webkit-background-clip: text;
@@ -54,7 +57,7 @@
     .center-title { text-align: center; flex: 1; }
     .center-title h1 {
       font-family: 'Orbitron', sans-serif;
-      font-size: 32px;
+      font-size: 30px;
       font-weight: 900;
       letter-spacing: 4px;
       color: #fff;
@@ -74,21 +77,22 @@
       font-weight: 800;
       padding: 6px 14px;
       border-radius: 6px;
+      box-shadow: 0 0 10px rgba(0, 216, 246, 0.25);
     }
 
     .dashboard-layout {
       display: grid;
-      grid-template-columns: 260px 1fr 280px;
+      grid-template-columns: 270px 1fr 280px;
       gap: 12px;
-      margin-top: 10px;
+      margin-top: 12px;
       align-items: start;
     }
 
     .side-col {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      max-height: 720px;
+      gap: 12px;
+      max-height: 740px;
       overflow-y: auto;
       scrollbar-width: thin;
       scrollbar-color: var(--border-cyan) transparent;
@@ -104,10 +108,13 @@
     .group-hdr {
       background: linear-gradient(90deg, #09233a, #04101d);
       border-bottom: 1px solid var(--border-cyan);
-      padding: 6px 10px;
+      padding: 7px 10px;
       font-weight: 800;
       font-size: 14px;
       color: var(--gold);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
     .group-hdr.right-hdr { color: #38bdf8; }
 
@@ -121,19 +128,25 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 4px 6px;
+      padding: 5px 6px;
       border-radius: 6px;
       cursor: pointer;
       font-size: 13px;
       font-weight: 700;
       transition: all 0.2s;
+      border: 1px solid transparent;
     }
-    .item-row:hover, .item-row.active {
+    .item-row:hover {
+      background: rgba(0, 240, 255, 0.15);
+      border-color: var(--border-cyan);
+    }
+    .item-row.active {
       background: rgba(255, 102, 0, 0.25);
+      border-color: var(--orange);
     }
     .num-dot {
-      width: 19px;
-      height: 19px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
       background: var(--orange);
       color: #000;
@@ -146,12 +159,13 @@
       flex-shrink: 0;
     }
     .num-dot.right-dot { background: var(--gold); }
-    .item-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .item-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #cbd5e1; }
 
     .center-stage-col {
       display: flex;
       flex-direction: column;
       align-items: center;
+      position: relative;
     }
 
     #stage-container {
@@ -166,6 +180,40 @@
       touch-action: none;
     }
     #stage-container canvas { width: 100%; height: 100%; display: block; }
+
+    .hud-tools {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: rgba(4, 11, 20, 0.85);
+      border: 1px solid var(--border-cyan);
+      padding: 6px;
+      border-radius: 10px;
+      z-index: 15;
+    }
+    .tool-btn {
+      width: 32px;
+      height: 32px;
+      background: #091726;
+      border: 1px solid var(--panel-border);
+      color: var(--cyan);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+    .tool-btn:hover, .tool-btn.active {
+      background: var(--cyan);
+      color: #000;
+      border-color: #fff;
+    }
 
     .callout {
       position: absolute;
@@ -193,7 +241,7 @@
 
     .controls-deck {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       margin-top: 12px;
       flex-wrap: wrap;
       justify-content: center;
@@ -205,8 +253,8 @@
       color: #fff;
       font-family: 'Rajdhani', sans-serif;
       font-weight: 800;
-      font-size: 15px;
-      padding: 7px 18px;
+      font-size: 14px;
+      padding: 7px 16px;
       border-radius: 8px;
       cursor: pointer;
       transition: all 0.25s;
@@ -218,21 +266,21 @@
     .slider-box {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       background: #061524;
       border: 1px solid var(--border-cyan);
-      padding: 5px 14px;
+      padding: 5px 12px;
       border-radius: 20px;
       font-family: 'Orbitron', sans-serif;
-      font-size: 12px;
+      font-size: 11px;
       color: #fff;
     }
-    .slider-box input { width: 130px; accent-color: var(--cyan); cursor: pointer; }
+    .slider-box input { width: 110px; accent-color: var(--cyan); cursor: pointer; }
 
     .bottom-status-strip {
       display: grid;
-      grid-template-columns: 240px 1fr 340px;
-      gap: 14px;
+      grid-template-columns: 230px 1fr 310px;
+      gap: 12px;
       margin-top: 14px;
       align-items: center;
     }
@@ -244,9 +292,10 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      box-shadow: 0 0 15px rgba(0, 216, 246, 0.15);
     }
-    .lte-sig { font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; color: var(--cyan); line-height: 1; }
-    .lte-sig small { display: block; font-size: 11px; color: #94a3b8; }
+    .lte-sig { font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 900; color: var(--cyan); line-height: 1; }
+    .lte-sig small { display: block; font-size: 10px; color: #94a3b8; margin-top: 2px; }
 
     .inspector-card {
       background: var(--card-bg);
@@ -256,6 +305,7 @@
       display: flex;
       align-items: center;
       gap: 16px;
+      box-shadow: 0 0 20px rgba(0, 216, 246, 0.2);
     }
     .soc-icon {
       width: 52px;
@@ -271,8 +321,9 @@
       font-size: 11px;
       font-weight: 900;
       flex-shrink: 0;
+      box-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
     }
-    .insp-details h3 { font-family: 'Orbitron', sans-serif; font-size: 16px; color: var(--cyan); margin-bottom: 3px; }
+    .insp-details h3 { font-family: 'Orbitron', sans-serif; font-size: 15px; color: var(--cyan); margin-bottom: 2px; }
     .insp-details p { font-size: 13px; color: #cbd5e1; line-height: 1.35; }
 
     .footer-crown {
@@ -281,16 +332,17 @@
       border-radius: 12px;
       padding: 10px 14px;
       text-align: right;
+      box-shadow: 0 0 20px rgba(0, 216, 246, 0.15);
     }
     .footer-crown span { font-family: 'Orbitron', sans-serif; font-size: 9px; color: #94a3b8; letter-spacing: 2px; display: block; }
-    .footer-crown h2 { font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 900; color: #fff; letter-spacing: 2px; }
+    .footer-crown h2 { font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 900; color: #fff; letter-spacing: 2px; }
     .footer-crown h2 i { color: var(--orange); font-style: italic; }
 
-    @media (max-width: 1000px) {
+    @media (max-width: 1024px) {
       .dashboard-layout { grid-template-columns: 1fr; }
       .center-stage-col { order: -1; }
       .bottom-status-strip { grid-template-columns: 1fr; }
-      #stage-container { height: 420px; }
+      #stage-container { height: 440px; }
     }
   </style>
 </head>
@@ -325,11 +377,18 @@
       <div id="stage-container">
         <svg class="callout-lines" id="svg-lines"></svg>
         <div id="callout-box-container"></div>
+        <div class="hud-tools">
+          <button class="tool-btn" id="hud-tag" onclick="toggleTags()" title="Tags On/Off">🏷</button>
+          <button class="tool-btn" onclick="zoomCam(0.85)" title="Zoom In">🔍+</button>
+          <button class="tool-btn" onclick="zoomCam(1.15)" title="Zoom Out">🔍-</button>
+          <button class="tool-btn" onclick="resetView()" title="Reset">↻</button>
+        </div>
       </div>
 
       <div class="controls-deck">
         <button class="action-btn active" id="btn-explode" onclick="toggleExplosion()">💥 Exploded (अलग करें)</button>
         <button class="action-btn cyan-btn" id="btn-spin" onclick="toggleAutoSpin()">🔄 360° Auto Spin</button>
+        <button class="action-btn" id="btn-tag-main" onclick="toggleTags()">🏷 टैग्स (Tags)</button>
         <div class="slider-box">
           <span>0°</span>
           <input type="range" id="angle-slider" min="0" max="360" value="30" oninput="manualRotate(this.value)">
@@ -357,7 +416,7 @@
 
   <div class="bottom-status-strip">
     <div class="lte-box">
-      <div style="font-size:22px; color:var(--cyan)">📶</div>
+      <div style="font-size:24px; color:var(--cyan)">📶</div>
       <div class="lte-sig">
         4G VoLTE
         <small>SIM LTE ACTIVE</small>
@@ -368,7 +427,7 @@
       <div class="soc-icon" id="soc-badge">LJ939</div>
       <div class="insp-details">
         <h3 id="info-title">Part #1: CPU / Processor</h3>
-        <p id="info-desc">घड़ी का मुख्य दिमाग - यह 4G LTE नेटवर्क, ऑपरेटिंग सिस्टम, ऐप प्रोसेसिंग और ग्राफिक्स रेंडरिंग को संभालता है।</p>
+        <p id="info-desc">घड़ी का मुख्य दिमाग - यह 4G LTE नेटवर्क, ऑपरेटिंग सिस्टम, ऐप प्रोसेसिंग और ग्राफिक्स रेंडरिंग को पूरी तरह से संभालता है।</p>
       </div>
     </div>
 
@@ -382,159 +441,94 @@
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
   <script>
+    // Audio Synthesizer Engine (Web Audio API)
+    const AudioEngine = {
+      ctx: null,
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          this.ctx = new AudioContext();
+        }
+        if (this.ctx.state === 'suspended') this.ctx.resume();
+      },
+      playClick() {
+        try {
+          this.init();
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(800, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(1400, this.ctx.currentTime + 0.05);
+          gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.05);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.05);
+        } catch(e) {}
+      },
+      playMotor() {
+        try {
+          this.init();
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(120, this.ctx.currentTime);
+          gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.18);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.18);
+        } catch(e) {}
+      }
+    };
+
+    // 45 Hardware Parts Catalog
     const partsData = [
       { id: 1, g: 1, name: "CPU / Processor", role: "घड़ी का दिमाग", desc: "LJ939 Quad-Core 4G नेटवर्क और Android OS चिपसेट।" },
-      { id: 2, g: 1, name: "RAM IC", role: "मेमोरी", desc: "मल्टीटास्किंग और ऐप्स के लिए LPDDR RAM।" },
-      { id: 3, g: 1, name: "ROM / Flash IC", role: "स्टोरेज", desc: "सिस्टम फाइल्स और डेटा के लिए 64GB स्टोरेज।" },
-      { id: 4, g: 1, name: "4G LTE Modem IC", role: "4G नेटवर्क", desc: "हाई-स्पीड इंटरनेट और VoLTE चिपसेट।" },
-      { id: 5, g: 1, name: "RF Antenna Circuit", role: "सिग्नल सर्किट", desc: "रेडियो सिग्नल फिल्टरिंग और एंटीना सर्किट।" },
-      { id: 6, g: 1, name: "SIM Connector", role: "SIM पिन", desc: "नैनो-सिम कार्ड कनेक्टर।" },
+      { id: 2, g: 1, name: "RAM IC", role: "ऐप चलाने की मेमोरी", desc: "मल्टीटास्किंग और ऐप्स के स्मूथ परफॉर्मेंस के लिए LPDDR RAM।" },
+      { id: 3, g: 1, name: "ROM / Flash IC", role: "डेटा और सॉफ्टवेयर स्टोर", desc: "सिस्टम फाइल्स और डेटा के लिए 64GB स्टोरेज चिप।" },
+      { id: 4, g: 1, name: "4G LTE Modem IC", role: "4G नेटवर्क", desc: "हाई-स्पीड इंटरनेट और VoLTE कॉलिंग चिपसेट।" },
+      { id: 5, g: 1, name: "RF Antenna Circuit", role: "सिग्नल सर्किट", desc: "रेडियो सिग्नल फिल्टरिंग और एंटीना ट्यूनर लाइन।" },
+      { id: 6, g: 1, name: "SIM Connector", role: "SIM पिन", desc: "नैनो-सिम कार्ड कनेक्टर सॉकेट।" },
       { id: 7, g: 1, name: "PMIC (Power IC)", role: "पावर कंट्रोल", desc: "पावर मैनेजमेंट वोल्टेज कंट्रोलर चिप।" },
-      { id: 8, g: 1, name: "Audio IC / Amp", role: "आवाज़", desc: "लाउड साउंड एम्पलीफायर चिप।" },
-      { id: 9, g: 1, name: "Charging IC", role: "चार्जिंग", desc: "बैटरी सेफ चार्जिंग सर्किट चिप।" },
-      { id: 10, g: 1, name: "Display Connector", role: "स्क्रीन सॉकेट", desc: "डिस्प्ले FPC कनेक्टर।" },
-      { id: 11, g: 1, name: "Touch Controller IC", role: "टच आईसी", desc: "टच इनपुट प्रोसेसिंग चिप।" },
-      { id: 12, g: 1, name: "Camera Connector", role: "कैमरा सॉकेट", desc: "कैमरा फ्लेक्स कनेक्टर।" },
-      { id: 13, g: 1, name: "Sensor IC", role: "सेंसर", desc: "स्टेप्स और मोशन ट्रैकिंग चिप।" },
-      { id: 14, g: 1, name: "Battery Connector", role: "बैटरी टर्मिनल", desc: "पावर इनपुट टर्मिनल्स।" },
-      { id: 15, g: 1, name: "Microphone Circuit", role: "माइक", desc: "नॉइज़-फ्री वॉइस सर्किट।" },
+      { id: 8, g: 1, name: "Audio IC / Amp", role: "आवाज़", desc: "लाउड कॉलिंग व मीडिया साउंड एम्पलीफायर चिप।" },
+      { id: 9, g: 1, name: "Charging IC", role: "चार्जिंग", desc: "बैटरी सेफ चार्जिंग सर्किट रेगुलेटर।" },
+      { id: 10, g: 1, name: "Display Connector", role: "स्क्रीन सॉकेट", desc: "डिस्प्ले FPC कनेक्टर क्लिप।" },
+      { id: 11, g: 1, name: "Touch Controller IC", role: "टच आईसी", desc: "टच इनपुट प्रोसेसिंग चिपसेट।" },
+      { id: 12, g: 1, name: "Camera Connector", role: "कैमरा सॉकेट", desc: "रोटेटिंग कैमरा मॉड्यूल का फ्लेक्स कनेक्टर।" },
+      { id: 13, g: 1, name: "Sensor IC", role: "सेंसर", desc: "मोशन और स्टेप्स ट्रैकिंग 6-एक्सिस चिप।" },
+      { id: 14, g: 1, name: "Battery Connector", role: "बैटरी टर्मिनल", desc: "3.8V लिथियम पावर इनपुट टर्मिनल्स।" },
+      { id: 15, g: 1, name: "Microphone Circuit", role: "माइक सर्किट", desc: "नॉइज़-फ्री डिजिटल वॉइस फिल्टर सर्किट।" },
 
-      { id: 16, g: 2, name: "Speaker 🔊", role: "स्पीकर", desc: "लाउड एकॉस्टिक स्पीकर यूनिट।" },
-      { id: 17, g: 2, name: "SIM Card Slot", role: "सिम ट्रे", desc: "बाईं तरफ लगा नैनो-सिम स्लॉट।" },
-      { id: 18, g: 2, name: "Speaker Mesh", role: "जाली", desc: "डस्ट और वॉटर प्रोटेक्शन मेश।" },
-      { id: 19, g: 2, name: "Speaker Connection", role: "वायरिंग", desc: "स्पीकर ऑडियो केबल।" },
+      { id: 16, g: 2, name: "Speaker 🔊", role: "स्पीकर यूनिट", desc: "बाएं फ्रेम में लगा लाउड एकॉस्टिक स्पीकर।" },
+      { id: 17, g: 2, name: "SIM Card Slot", role: "सिम ट्रे", desc: "बाईं तरफ लगा इजेक्टेबल नैनो-सिम स्लॉट।" },
+      { id: 18, g: 2, name: "Speaker Mesh", role: "जाली", desc: "डस्ट और वॉटर प्रोटेक्शन स्टील मेश।" },
+      { id: 19, g: 2, name: "Speaker Connection", role: "वायरिंग", desc: "स्पीकर वॉइस कॉइल केबल लाइन।" },
 
-      { id: 20, g: 3, name: "Power Button 🔘", role: "क्राउन", desc: "ऑरेंज रोटरी क्राउन बटन।" },
-      { id: 21, g: 3, name: "Microphone 🎤", role: "माइक पोर्ट", desc: "कॉलिंग वॉइस माइक।" },
-      { id: 22, g: 3, name: "Camera 📷", role: "एचडी कैमरा", desc: "180° रोटेटिंग एचडी कैमरा लेंस।" },
-      { id: 23, g: 3, name: "Button Flex", role: "केबल", desc: "पावर बटन फ्लेक्स रिबन।" },
-      { id: 24, g: 3, name: "Camera Flex", role: "केबल", desc: "कैमरा डेटा केबल।" },
+      { id: 20, g: 3, name: "Power Button 🔘", role: "रोटरी क्राउन", desc: "ऑरेंज एनोडाइज्ड रोटरी क्राउन बटन।" },
+      { id: 21, g: 3, name: "Microphone 🎤", role: "माइक पोर्ट", desc: "दाईं तरफ लगा वॉइस इनपुट माइक।" },
+      { id: 22, g: 3, name: "Camera 📷", role: "HD रोटेटिंग कैमरा", desc: "180° फ्लिप और रोटेशन लेंस मॉड्यूल।" },
+      { id: 23, g: 3, name: "Button Flex", role: "केबल", desc: "पावर बटन फ्लेक्स रिबन लाइन।" },
+      { id: 24, g: 3, name: "Camera Flex", role: "डेटा केबल", desc: "हाई-स्पीड इमेज सिग्नल्स रिबन केबल।" },
 
-      { id: 25, g: 4, name: "Display Screen", role: "AMOLED", desc: "2.02-इंच हाई-रेज़ोल्यूशन वाइब्रेंट स्क्रीन।" },
+      { id: 25, g: 4, name: "Display Screen", role: "2.02\" AMOLED", desc: "वाइब्रेंट कलर्स और हाई-ब्राइटनेस AMOLED पैनल।" },
       { id: 26, g: 4, name: "Display Glass", role: "सफायर ग्लास", desc: "कर्व्ड स्क्रैच-रेसिस्टेंट प्रोटेक्शन ग्लास।" },
-      { id: 27, g: 4, name: "Touch Panel", role: "कैपेसिटिव टच", desc: "स्मूथ टच जेस्चर लेयर।" },
-      { id: 28, g: 4, name: "Display Flex Cable", role: "रिबन", desc: "स्क्रीन डिस्प्ले FPC केबल।" },
+      { id: 27, g: 4, name: "Touch Panel", role: "कैपेसिटिव टच", desc: "स्मूथ टच जेस्चर डिजिटाइज़र लेयर।" },
+      { id: 28, g: 4, name: "Display Flex Cable", role: "रिबन", desc: "स्क्रीन डिस्प्ले FPC मुख्य रिबन।" },
 
-      { id: 29, g: 5, name: "Heart Rate Sensor", role: "हार्ट रेट", desc: "ऑप्टिकल PPG पल्स सेंसर।" },
-      { id: 30, g: 5, name: "SpO2 Sensor", role: "ऑक्सीजन", desc: "ब्लड ऑक्सीजन मॉनिटर।" },
-      { id: 31, g: 5, name: "Sensor LED", role: "LED", desc: "ग्रीन/रेड ऑप्टिकल LED।" },
-      { id: 32, g: 5, name: "Sensor Receiver", role: "रिसीवर", desc: "फोटोडायोड लाइट डिटेक्टर।" },
-      { id: 33, g: 5, name: "Charging Contacts", role: "पिन (••••)", desc: "मैग्नेटिक 4-पॉइंट चार्जिंग पोर्ट।" },
+      { id: 29, g: 5, name: "Heart Rate Sensor", role: "हार्ट रेट", desc: "ऑप्टिकल PPG पल्स रेट सेंसर।" },
+      { id: 30, g: 5, name: "SpO2 Sensor", role: "ब्लड ऑक्सीजन", desc: "ब्लड ऑक्सीजन सैचुरेशन मॉनिटर।" },
+      { id: 31, g: 5, name: "Sensor LED", role: "ग्रीन/रेड LED", desc: "त्वचा के नीचे ब्लड फ्लो पढ़ने वाली ड्यूल LED।" },
+      { id: 32, g: 5, name: "Sensor Receiver", role: "फोटोडायोड", desc: "लाइट सिग्नल्स डिटेक्ट करने वाला रिसीवर।" },
+      { id: 33, g: 5, name: "Charging Contacts", role: "पिन (••••)", desc: "मैग्नेटिक 4-पॉइंट गोल्ड प्लेटेड चार्जिंग डॉक।" },
 
-      { id: 34, g: 6, name: "Rechargeable Battery", role: "1000mAh", desc: "3.8V हाई-बैकअप लिथियम सेल।" },
-      { id: 35, g: 6, name: "Vibration Motor", role: "मोटर", desc: "हैप्टिक कॉलिंग वाइब्रेटर।" },
-      { id: 36, g: 6, name: "4G Antenna", role: "एंटीना", desc: "सेलुलर नेटवर्क एंटीना।" },
-      { id: 37, g: 6, name: "Wi-Fi / BT Antenna", role: "एंटीना", desc: "वायरलेस कनेक्टिविटी एंटीना।" },
-      { id: 38, g: 6, name: "GPS Antenna", role: "एंटीना", desc: "सैटेलाइट लोकेशन एंटीना।" },
-      { id: 39, g: 6, name: "Internal PCB", role: "सर्किट बोर्ड", desc: "मेन ग्रीन मदरबोर्ड प्लेट।" },
-      { id: 40, g: 6, name: "Crystal Oscillator", role: "क्रिस्टल", desc: "सिस्टम टाइमिंग क्लॉक।" },
-      { id: 41, g: 6, name: "Capacitors", role: "फिल्टर", desc: "वोल्टेज स्मूथिंग कंपोनेंट्स।" },
-      { id: 42, g: 6, name: "Resistors", role: "रेगुलेटर", desc: "करंट लिमिटिंग रेसिस्टर्स।" },
-      { id: 43, g: 6, name: "Inductors", role: "फिल्टर", desc: "नॉइज़ फिल्टर कॉइल्स।" },
-      { id: 44, g: 6, name: "Connectors", role: "सॉकेट्स", desc: "फ्लेक्स केबल लॉकर्स।" },
-      { id: 45, g: 6, name: "Power Switch Circuit", role: "सेफ्टी", desc: "ओवर-वोल्टेज सेफ्टी सर्किट।" }
-    ];
-
-    function populateLists() {
-      const gMap = { 1: 'list-g1', 2: 'list-g2', 3: 'list-g3', 4: 'list-g4', 5: 'list-g5', 6: 'list-g6' };
-      partsData.forEach(p => {
-        const div = document.createElement('div');
-        div.className = 'item-row';
-        div.id = `row-${p.id}`;
-        div.onclick = () => selectPart(p.id);
-        const dotClass = p.g >= 4 ? 'num-dot right-dot' : 'num-dot';
-        div.innerHTML = `<span class="${dotClass}">${p.id}</span><span class="item-label">${p.name}</span>`;
-        document.getElementById(gMap[p.g]).appendChild(div);
-      });
-    }
-    populateLists();
-
-    const container = document.getElementById('stage-container');
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x040912);
-
-    const camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 100);
-    camera.position.set(8.5, 6.5, 12.0);
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(container.clientWidth, container.clientHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    container.appendChild(renderer.domElement);
-
-    const controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.target.set(0, 0.4, 0);
-
-    scene.add(new THREE.HemisphereLight(0xffffff, 0x112233, 1.4));
-    const mainLight = new THREE.DirectionalLight(0xffffff, 1.5);
-    mainLight.position.set(8, 14, 8);
-    scene.add(mainLight);
-
-    const cyanLight = new THREE.PointLight(0x00f0ff, 2.0, 30);
-    cyanLight.position.set(-8, 5, 6);
-    scene.add(cyanLight);
-
-    const orangeLight = new THREE.PointLight(0xff6600, 2.0, 30);
-    orangeLight.position.set(8, -2, -6);
-    scene.add(orangeLight);
-
-    const watchRig = new THREE.Group();
-    scene.add(watchRig);
-
-    function makeRoundBox(w, h, d, r) {
-      const s = new THREE.Shape();
-      const x = -w/2, y = -d/2;
-      s.moveTo(x + r, y); s.lineTo(x + w - r, y);
-      s.quadraticCurveTo(x + w, y, x + w, y + r);
-      s.lineTo(x + w, y + d - r);
-      s.quadraticCurveTo(x + w, y + d, x + w - r, y + d);
-      s.lineTo(x + r, y + d);
-      s.quadraticCurveTo(x, y + d, x, y + d - r);
-      s.lineTo(x, y + r);
-      s.quadraticCurveTo(x, y, x + r, y);
-      const geom = new THREE.ExtrudeGeometry(s, { depth: h, bevelEnabled: false, curveSegments: 16 });
-      geom.rotateX(-Math.PI / 2);
-      geom.translate(0, -h/2, 0);
-      return geom;
-    }
-
-    function createScreenTexture() {
-      const c = document.createElement('canvas');
-      c.width = 1024; c.height = 1200;
-      const ctx = c.getContext('2d');
-      ctx.fillStyle = '#000000';
-      ctx.fillRect(0, 0, 1024, 1200);
-
-      ctx.strokeStyle = '#00f0ff';
-      ctx.lineWidth = 18;
-      ctx.strokeRect(36, 36, 952, 1128);
-
-      const cx = 512, cy = 600, rad = 360;
-      const arcGrad = ctx.createLinearGradient(cx - rad, cy, cx + rad, cy - rad);
-      arcGrad.addColorStop(0, '#00f0ff');
-      arcGrad.addColorStop(0.35, '#38bdf8');
-      arcGrad.addColorStop(0.7, '#c084fc');
-      arcGrad.addColorStop(1, '#ff007f');
-
-      ctx.beginPath();
-      ctx.arc(cx, cy, rad, 0.75 * Math.PI, 2.15 * Math.PI, false);
-      ctx.strokeStyle = arcGrad;
-      ctx.lineWidth = 64;
-      ctx.lineCap = 'round';
-      ctx.stroke();
-
-      ctx.fillStyle = '#00f0ff';
-      ctx.font = 'bold 44px Arial';
-      ctx.fillText('●●●● 4G VoLTE', 110, 150);
-      ctx.fillStyle = '#fbbf24';
-      ctx.fillText('⚡ 100%', 810, 150);
-
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 240px Arial';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('10:48', cx, cy - 20);
-
-      ctx.fillStyle = '#00f0ff';
-      ctx.font = '
+      { id: 34, g: 6, name: "Rechargeable Battery", role: "1000mAh बैटरी", desc: "3.8V हाई-बैकअप लिथियम पॉलीमर सेल।" },
+      { id: 35, g: 6, name: "Vibration Motor", role: "हैप्टिक मोटर", desc: "कॉल और नोटिफिकेशन वाइब्रेशन देने वाली गोल मोटर।" },
+      { id: 36, g: 6, name: "4G Antenna", role: "सेलुलर एंटीना", desc: "फ्रेम पर माउंटेड 4G VoLTE सेलुलर एंटीना।" },
+      { id: 37, g: 6, name: "Wi-Fi / BT Antenna", role: "वायरलेस एंटीना", desc: "2.4GHz वाई-फाई और ब्लूटूथ एंटीना।" },
+      { id: 38, g: 6, name: "GPS Antenna", role: "नेविगेशन", desc: "लाइव सैटेलाइट लोकेशन ट्रेसिंग एंटीना।" },
+      { id: 39, g: 6, name: "Internal PCB", role: "मदरबोर्ड", desc: "मेन हरा मल्टी-लेयर सर्किट बोर्ड।" },
+      { id: 40, g: 6, name: "Crystal Oscillator", role: "क्लॉक क्रिस्टल", desc: "सिस्टम टाइमिंग नियंत्रित करने वाला 32.768kHz क्रिस्टल।" },
+      { id: 41, g: 6, name: "Capacitors", role: "वोल्टेज स्मूथिंग", desc: "करंट के उतार-चढ
