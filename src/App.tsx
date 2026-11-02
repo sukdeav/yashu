@@ -279,7 +279,7 @@ export default function App() {
                 <img
                   src="/assets/aistudio/YASHU_PUDO_Neon_Smartwatch_Teardown_620ffbde.png"
                   alt="YASHU PUDO 4G Smartwatch Realistic Teardown"
-                  className="w-full h-auto max-h-[500px] object-contain rounded-xl drop-shadow-[0_0_30px_rgba(0,234,255,0.2)]"
+                  className="w-full h-auto max-h-[500px] object-contain rounded-xl drop-shadow-[0_0_30px_rgba(0,234,255,0.2)] bg-black"
                 />
 
                 {/* Interactive Clickable Hotspot Callout Overlays */}
