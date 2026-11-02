@@ -43,7 +43,7 @@
     }
     .main-logo {
       font-family: 'Orbitron', sans-serif;
-      font-size: 32px;
+      font-size: 30px;
       font-weight: 900;
       background: linear-gradient(180deg, #ffffff 10%, var(--orange) 80%);
       -webkit-background-clip: text;
@@ -54,7 +54,7 @@
     .center-title { text-align: center; flex: 1; }
     .center-title h1 {
       font-family: 'Orbitron', sans-serif;
-      font-size: 34px;
+      font-size: 32px;
       font-weight: 900;
       letter-spacing: 4px;
       color: #fff;
@@ -499,7 +499,6 @@
       return geom;
     }
 
-    // 4K Ultra-Vibrant AMOLED Screen
     function createScreenTexture() {
       const c = document.createElement('canvas');
       c.width = 1024; c.height = 1200;
@@ -537,4 +536,5 @@
       ctx.textBaseline = 'middle';
       ctx.fillText('10:48', cx, cy - 20);
 
-      ctx.fil
+      ctx.fillStyle = '#00f0ff';
+      ctx.font = '
