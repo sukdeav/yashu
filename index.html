@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>YASHU PUDO - 4G Ultra Watch 45 Hardware Architecture Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800;900&family=Rajdhani:wght@600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #030811;
-      --card-bg: rgba(6, 17, 30, 0.94);
+      --card-bg: rgba(6, 17, 30, 0.95);
       --border-cyan: #00d8f6;
       --orange: #ff6600;
       --gold: #ffb703;
@@ -18,6 +18,8 @@
       --purple: #a855f7;
       --text: #e2e8f0;
       --panel-border: #13334d;
+      --glow-cyan: 0 0 15px rgba(0, 216, 246, 0.3);
+      --glow-orange: 0 0 15px rgba(255, 102, 0, 0.4);
     }
 
     * {
@@ -29,7 +31,7 @@
     }
 
     body {
-      background: radial-gradient(circle at 50% 10%, #0c2138 0%, #030811 85%);
+      background: radial-gradient(circle at 50% 10%, #0c2138 0%, #030811 90%);
       color: var(--text);
       font-family: 'Rajdhani', sans-serif;
       min-height: 100vh;
@@ -41,12 +43,12 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-bottom: 8px;
+      padding-bottom: 10px;
       border-bottom: 1px solid var(--panel-border);
     }
     .main-logo {
       font-family: 'Orbitron', sans-serif;
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 900;
       background: linear-gradient(180deg, #ffffff 10%, var(--orange) 80%);
       -webkit-background-clip: text;
@@ -57,9 +59,9 @@
     .center-title { text-align: center; flex: 1; }
     .center-title h1 {
       font-family: 'Orbitron', sans-serif;
-      font-size: 30px;
+      font-size: 28px;
       font-weight: 900;
-      letter-spacing: 4px;
+      letter-spacing: 3px;
       color: #fff;
     }
     .center-title p {
@@ -77,14 +79,14 @@
       font-weight: 800;
       padding: 6px 14px;
       border-radius: 6px;
-      box-shadow: 0 0 10px rgba(0, 216, 246, 0.25);
+      box-shadow: var(--glow-cyan);
     }
 
     .dashboard-layout {
       display: grid;
-      grid-template-columns: 270px 1fr 280px;
-      gap: 12px;
-      margin-top: 12px;
+      grid-template-columns: 280px 1fr 280px;
+      gap: 14px;
+      margin-top: 14px;
       align-items: start;
     }
 
@@ -92,7 +94,7 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
-      max-height: 740px;
+      max-height: 760px;
       overflow-y: auto;
       scrollbar-width: thin;
       scrollbar-color: var(--border-cyan) transparent;
@@ -108,9 +110,9 @@
     .group-hdr {
       background: linear-gradient(90deg, #09233a, #04101d);
       border-bottom: 1px solid var(--border-cyan);
-      padding: 7px 10px;
+      padding: 8px 10px;
       font-weight: 800;
-      font-size: 14px;
+      font-size: 13.5px;
       color: var(--gold);
       display: flex;
       justify-content: space-between;
@@ -128,7 +130,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 5px 6px;
+      padding: 6px 8px;
       border-radius: 6px;
       cursor: pointer;
       font-size: 13px;
@@ -137,12 +139,13 @@
       border: 1px solid transparent;
     }
     .item-row:hover {
-      background: rgba(0, 240, 255, 0.15);
+      background: rgba(0, 240, 255, 0.12);
       border-color: var(--border-cyan);
     }
     .item-row.active {
-      background: rgba(255, 102, 0, 0.25);
+      background: rgba(255, 102, 0, 0.28);
       border-color: var(--orange);
+      box-shadow: 0 0 10px rgba(255, 102, 0, 0.3);
     }
     .num-dot {
       width: 20px;
@@ -171,7 +174,7 @@
     #stage-container {
       width: 100%;
       height: 520px;
-      background: radial-gradient(ellipse at center, #112d47 0%, #040912 75%);
+      background: radial-gradient(ellipse at center, #10273f 0%, #040912 80%);
       border: 2px solid var(--border-cyan);
       border-radius: 16px;
       position: relative;
@@ -179,7 +182,13 @@
       box-shadow: 0 0 35px rgba(0, 216, 246, 0.25);
       touch-action: none;
     }
-    #stage-container canvas { width: 100%; height: 100%; display: block; }
+    #stage-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: grab;
+    }
+    #stage-canvas:active { cursor: grabbing; }
 
     .hud-tools {
       position: absolute;
@@ -205,7 +214,7 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: bold;
       transition: all 0.2s;
     }
@@ -214,30 +223,6 @@
       color: #000;
       border-color: #fff;
     }
-
-    .callout {
-      position: absolute;
-      background: rgba(8, 20, 36, 0.95);
-      border: 1.5px solid var(--orange);
-      border-radius: 8px;
-      padding: 6px 10px;
-      width: 145px;
-      color: #fff;
-      font-size: 11px;
-      box-shadow: 0 0 15px rgba(255, 102, 0, 0.4);
-      z-index: 10;
-      pointer-events: none;
-    }
-    .callout b { display: block; color: var(--gold); font-size: 12px; margin-bottom: 2px; }
-    .callout-lines {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 5;
-    }
-    .callout-lines line { stroke: var(--orange); stroke-width: 1.5; stroke-dasharray: 4, 3; }
 
     .controls-deck {
       display: flex;
@@ -318,7 +303,7 @@
       justify-content: center;
       color: var(--gold);
       font-family: 'Orbitron', sans-serif;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 900;
       flex-shrink: 0;
       box-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
@@ -342,7 +327,7 @@
       .dashboard-layout { grid-template-columns: 1fr; }
       .center-stage-col { order: -1; }
       .bottom-status-strip { grid-template-columns: 1fr; }
-      #stage-container { height: 440px; }
+      #stage-container { height: 450px; }
     }
   </style>
 </head>
@@ -375,12 +360,11 @@
 
     <div class="center-stage-col">
       <div id="stage-container">
-        <svg class="callout-lines" id="svg-lines"></svg>
-        <div id="callout-box-container"></div>
+        <canvas id="stage-canvas"></canvas>
         <div class="hud-tools">
-          <button class="tool-btn" id="hud-tag" onclick="toggleTags()" title="Tags On/Off">🏷</button>
-          <button class="tool-btn" onclick="zoomCam(0.85)" title="Zoom In">🔍+</button>
-          <button class="tool-btn" onclick="zoomCam(1.15)" title="Zoom Out">🔍-</button>
+          <button class="tool-btn active" id="hud-tag" onclick="toggleTags()" title="Tags On/Off">🏷</button>
+          <button class="tool-btn" onclick="zoomView(0.85)" title="Zoom In">🔍+</button>
+          <button class="tool-btn" onclick="zoomView(1.15)" title="Zoom Out">🔍-</button>
           <button class="tool-btn" onclick="resetView()" title="Reset">↻</button>
         </div>
       </div>
@@ -388,11 +372,11 @@
       <div class="controls-deck">
         <button class="action-btn active" id="btn-explode" onclick="toggleExplosion()">💥 Exploded (अलग करें)</button>
         <button class="action-btn cyan-btn" id="btn-spin" onclick="toggleAutoSpin()">🔄 360° Auto Spin</button>
-        <button class="action-btn" id="btn-tag-main" onclick="toggleTags()">🏷 टैग्स (Tags)</button>
+        <button class="action-btn active" id="btn-tag-main" onclick="toggleTags()">🏷 टैग्स (Tags)</button>
         <div class="slider-box">
           <span>0°</span>
-          <input type="range" id="angle-slider" min="0" max="360" value="30" oninput="manualRotate(this.value)">
-          <span id="deg-label">30°</span>
+          <input type="range" id="angle-slider" min="0" max="360" value="25" oninput="manualRotate(this.value)">
+          <span id="deg-label">25°</span>
         </div>
         <button class="action-btn" onclick="assembleWatch()">📦 Assembled (जोड़ें)</button>
       </div>
@@ -424,7 +408,7 @@
     </div>
 
     <div class="inspector-card">
-      <div class="soc-icon" id="soc-badge">LJ939</div>
+      <div class="soc-icon" id="soc-badge">#1</div>
       <div class="insp-details">
         <h3 id="info-title">Part #1: CPU / Processor</h3>
         <p id="info-desc">घड़ी का मुख्य दिमाग - यह 4G LTE नेटवर्क, ऑपरेटिंग सिस्टम, ऐप प्रोसेसिंग और ग्राफिक्स रेंडरिंग को पूरी तरह से संभालता है।</p>
@@ -437,11 +421,8 @@
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-
   <script>
-    // Audio Synthesizer Engine (Web Audio API)
+    // Procedural Audio Synthesizer (Zero External File)
     const AudioEngine = {
       ctx: null,
       init() {
@@ -457,9 +438,9 @@
           const osc = this.ctx.createOscillator();
           const gain = this.ctx.createGain();
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(800, this.ctx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(1400, this.ctx.currentTime + 0.05);
-          gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+          osc.frequency.setValueAtTime(900, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(1600, this.ctx.currentTime + 0.05);
+          gain.gain.setValueAtTime(0.18, this.ctx.currentTime);
           gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.05);
           osc.connect(gain);
           gain.connect(this.ctx.destination);
@@ -467,19 +448,19 @@
           osc.stop(this.ctx.currentTime + 0.05);
         } catch(e) {}
       },
-      playMotor() {
+      playVibe() {
         try {
           this.init();
           const osc = this.ctx.createOscillator();
           const gain = this.ctx.createGain();
           osc.type = 'triangle';
-          osc.frequency.setValueAtTime(120, this.ctx.currentTime);
-          gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.18);
+          osc.frequency.setValueAtTime(140, this.ctx.currentTime);
+          gain.gain.setValueAtTime(0.25, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.15);
           osc.connect(gain);
           gain.connect(this.ctx.destination);
           osc.start();
-          osc.stop(this.ctx.currentTime + 0.18);
+          osc.stop(this.ctx.currentTime + 0.15);
         } catch(e) {}
       }
     };
@@ -488,7 +469,7 @@
     const partsData = [
       { id: 1, g: 1, name: "CPU / Processor", role: "घड़ी का दिमाग", desc: "LJ939 Quad-Core 4G नेटवर्क और Android OS चिपसेट।" },
       { id: 2, g: 1, name: "RAM IC", role: "ऐप चलाने की मेमोरी", desc: "मल्टीटास्किंग और ऐप्स के स्मूथ परफॉर्मेंस के लिए LPDDR RAM।" },
-      { id: 3, g: 1, name: "ROM / Flash IC", role: "डेटा और सॉफ्टवेयर स्टोर", desc: "सिस्टम फाइल्स और डेटा के लिए 64GB स्टोरेज चिप।" },
+      { id: 3, g: 1, name: "ROM / Flash IC", role: "डेटा और स्टोरेज", desc: "सिस्टम फाइल्स और डेटा के लिए 64GB स्टोरेज चिप।" },
       { id: 4, g: 1, name: "4G LTE Modem IC", role: "4G नेटवर्क", desc: "हाई-स्पीड इंटरनेट और VoLTE कॉलिंग चिपसेट।" },
       { id: 5, g: 1, name: "RF Antenna Circuit", role: "सिग्नल सर्किट", desc: "रेडियो सिग्नल फिल्टरिंग और एंटीना ट्यूनर लाइन।" },
       { id: 6, g: 1, name: "SIM Connector", role: "SIM पिन", desc: "नैनो-सिम कार्ड कनेक्टर सॉकेट।" },
@@ -531,4 +512,13 @@
       { id: 38, g: 6, name: "GPS Antenna", role: "नेविगेशन", desc: "लाइव सैटेलाइट लोकेशन ट्रेसिंग एंटीना।" },
       { id: 39, g: 6, name: "Internal PCB", role: "मदरबोर्ड", desc: "मेन हरा मल्टी-लेयर सर्किट बोर्ड।" },
       { id: 40, g: 6, name: "Crystal Oscillator", role: "क्लॉक क्रिस्टल", desc: "सिस्टम टाइमिंग नियंत्रित करने वाला 32.768kHz क्रिस्टल।" },
-      { id: 41, g: 6, name: "Capacitors", role: "वोल्टेज स्मूथिंग", desc: "करंट के उतार-चढ
+      { id: 41, g: 6, name: "Capacitors", role: "वोल्टेज स्मूथिंग", desc: "करंट के उतार-चढ़ाव को फिल्टर करने वाले SMD कैपेसिटर्स।" },
+      { id: 42, g: 6, name: "Resistors", role: "करंट कंट्रोल", desc: "सेंसर और चिप्स में करंट लिमिट करने वाले रेसिस्टर्स।" },
+      { id: 43, g: 6, name: "Inductors", role: "पावर फिल्टर", desc: "पावर लाइन में इलेक्ट्रोमैग्नेटिक नॉइज़ फिल्टर कॉइल्स।" },
+      { id: 44, g: 6, name: "Connectors", role: "सॉकेट्स", desc: "फ्लेक्स केबल्स को लॉक करने वाले BTB क्लिप्स।" },
+      { id: 45, g: 6, name: "Power Switch Circuit", role: "सेफ्टी सर्किट", desc: "ओवर-वोल्टेज और बैटरी इमरजेंसी सेफ्टी स्विच।" }
+    ];
+
+    function populateLists() {
+      const gMap = { 1: 'list-g1', 2: 'list-g2', 3: 'list-g3', 4: 'list-g4', 5: 'list-g5', 6: 'list-g6' };
+      pa
