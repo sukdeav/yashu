@@ -2,523 +2,312 @@
 <html lang="hi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>YASHU PUDO - 4G Ultra Watch 45 Hardware Architecture Studio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YASHU PUDO 4G Smartwatch Teardown Architecture</title>
+  
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Three.js 3D Library CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
   <style>
-    :root {
-      --bg: #030811;
-      --card-bg: rgba(6, 17, 30, 0.95);
-      --border-cyan: #00d8f6;
-      --orange: #ff6600;
-      --gold: #ffb703;
-      --cyan: #00f0ff;
-      --green: #10b981;
-      --purple: #a855f7;
-      --text: #e2e8f0;
-      --panel-border: #13334d;
-      --glow-cyan: 0 0 15px rgba(0, 216, 246, 0.3);
-      --glow-orange: 0 0 15px rgba(255, 102, 0, 0.4);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-    }
-
     body {
-      background: radial-gradient(circle at 50% 10%, #0c2138 0%, #030811 90%);
-      color: var(--text);
-      font-family: 'Rajdhani', sans-serif;
-      min-height: 100vh;
-      overflow-x: hidden;
-      padding: 10px 14px 40px 14px;
+      font-family: 'Rajdhani', -apple-system, sans-serif;
+      background-color: #04070b;
+      color: #e2e8f0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .font-orbitron { font-family: 'Orbitron', sans-serif; }
+    .font-mono-tech { font-family: 'Share Tech Mono', monospace; }
+    .font-rajdhani { font-family: 'Rajdhani', sans-serif; }
+    
+    .cyber-grid {
+      background-image: 
+        linear-gradient(to right, rgba(0, 240, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
+      background-size: 32px 32px;
     }
 
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--panel-border);
-    }
-    .main-logo {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 26px;
-      font-weight: 900;
-      background: linear-gradient(180deg, #ffffff 10%, var(--orange) 80%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 20px rgba(255, 102, 0, 0.6);
-      font-style: italic;
-    }
-    .center-title { text-align: center; flex: 1; }
-    .center-title h1 {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 28px;
-      font-weight: 900;
-      letter-spacing: 3px;
-      color: #fff;
-    }
-    .center-title p {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 11px;
-      color: var(--cyan);
-      letter-spacing: 2px;
-    }
-    .top-badge {
-      border: 1.5px solid var(--border-cyan);
-      background: rgba(0, 216, 246, 0.1);
-      color: var(--cyan);
-      font-family: 'Orbitron', sans-serif;
-      font-size: 11px;
-      font-weight: 800;
-      padding: 6px 14px;
-      border-radius: 6px;
-      box-shadow: var(--glow-cyan);
-    }
-
-    .dashboard-layout {
-      display: grid;
-      grid-template-columns: 280px 1fr 280px;
-      gap: 14px;
-      margin-top: 14px;
-      align-items: start;
-    }
-
-    .side-col {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      max-height: 760px;
-      overflow-y: auto;
-      scrollbar-width: thin;
-      scrollbar-color: var(--border-cyan) transparent;
-      padding-right: 4px;
-    }
-    .group-box {
-      background: var(--card-bg);
-      border: 1.5px solid var(--border-cyan);
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 0 15px rgba(0, 216, 246, 0.12);
-    }
-    .group-hdr {
-      background: linear-gradient(90deg, #09233a, #04101d);
-      border-bottom: 1px solid var(--border-cyan);
-      padding: 8px 10px;
-      font-weight: 800;
-      font-size: 13.5px;
-      color: var(--gold);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .group-hdr.right-hdr { color: #38bdf8; }
-
-    .part-list {
-      padding: 6px 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-    .item-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 8px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 700;
-      transition: all 0.2s;
-      border: 1px solid transparent;
-    }
-    .item-row:hover {
-      background: rgba(0, 240, 255, 0.12);
-      border-color: var(--border-cyan);
-    }
-    .item-row.active {
-      background: rgba(255, 102, 0, 0.28);
-      border-color: var(--orange);
-      box-shadow: 0 0 10px rgba(255, 102, 0, 0.3);
-    }
-    .num-dot {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: var(--orange);
-      color: #000;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 10px;
-      font-weight: 900;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .num-dot.right-dot { background: var(--gold); }
-    .item-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #cbd5e1; }
-
-    .center-stage-col {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-    }
-
-    #stage-container {
-      width: 100%;
-      height: 520px;
-      background: radial-gradient(ellipse at center, #10273f 0%, #040912 80%);
-      border: 2px solid var(--border-cyan);
-      border-radius: 16px;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 0 35px rgba(0, 216, 246, 0.25);
-      touch-action: none;
-    }
-    #stage-canvas {
-      width: 100%;
-      height: 100%;
-      display: block;
-      cursor: grab;
-    }
-    #stage-canvas:active { cursor: grabbing; }
-
-    .hud-tools {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      background: rgba(4, 11, 20, 0.85);
-      border: 1px solid var(--border-cyan);
-      padding: 6px;
-      border-radius: 10px;
-      z-index: 15;
-    }
-    .tool-btn {
-      width: 32px;
-      height: 32px;
-      background: #091726;
-      border: 1px solid var(--panel-border);
-      color: var(--cyan);
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: bold;
-      transition: all 0.2s;
-    }
-    .tool-btn:hover, .tool-btn.active {
-      background: var(--cyan);
-      color: #000;
-      border-color: #fff;
-    }
-
-    .controls-deck {
-      display: flex;
-      gap: 10px;
-      margin-top: 12px;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-    }
-    .action-btn {
-      background: #091a2b;
-      border: 1.5px solid var(--orange);
-      color: #fff;
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 800;
-      font-size: 14px;
-      padding: 7px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.25s;
-    }
-    .action-btn.active, .action-btn:hover { background: var(--orange); color: #000; }
-    .action-btn.cyan-btn { border-color: var(--cyan); }
-    .action-btn.cyan-btn.active, .action-btn.cyan-btn:hover { background: var(--cyan); color: #000; }
-
-    .slider-box {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: #061524;
-      border: 1px solid var(--border-cyan);
-      padding: 5px 12px;
-      border-radius: 20px;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 11px;
-      color: #fff;
-    }
-    .slider-box input { width: 110px; accent-color: var(--cyan); cursor: pointer; }
-
-    .bottom-status-strip {
-      display: grid;
-      grid-template-columns: 230px 1fr 310px;
-      gap: 12px;
-      margin-top: 14px;
-      align-items: center;
-    }
-    .lte-box {
-      background: var(--card-bg);
-      border: 2px solid var(--border-cyan);
-      border-radius: 12px;
-      padding: 10px 14px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      box-shadow: 0 0 15px rgba(0, 216, 246, 0.15);
-    }
-    .lte-sig { font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 900; color: var(--cyan); line-height: 1; }
-    .lte-sig small { display: block; font-size: 10px; color: #94a3b8; margin-top: 2px; }
-
-    .inspector-card {
-      background: var(--card-bg);
-      border: 2px solid var(--border-cyan);
-      border-radius: 12px;
-      padding: 10px 16px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      box-shadow: 0 0 20px rgba(0, 216, 246, 0.2);
-    }
-    .soc-icon {
-      width: 52px;
-      height: 52px;
-      background: #021f17;
-      border: 2px solid var(--gold);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--gold);
-      font-family: 'Orbitron', sans-serif;
-      font-size: 12px;
-      font-weight: 900;
-      flex-shrink: 0;
-      box-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
-    }
-    .insp-details h3 { font-family: 'Orbitron', sans-serif; font-size: 15px; color: var(--cyan); margin-bottom: 2px; }
-    .insp-details p { font-size: 13px; color: #cbd5e1; line-height: 1.35; }
-
-    .footer-crown {
-      background: var(--card-bg);
-      border: 2px solid var(--border-cyan);
-      border-radius: 12px;
-      padding: 10px 14px;
-      text-align: right;
-      box-shadow: 0 0 20px rgba(0, 216, 246, 0.15);
-    }
-    .footer-crown span { font-family: 'Orbitron', sans-serif; font-size: 9px; color: #94a3b8; letter-spacing: 2px; display: block; }
-    .footer-crown h2 { font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 900; color: #fff; letter-spacing: 2px; }
-    .footer-crown h2 i { color: var(--orange); font-style: italic; }
-
-    @media (max-width: 1024px) {
-      .dashboard-layout { grid-template-columns: 1fr; }
-      .center-stage-col { order: -1; }
-      .bottom-status-strip { grid-template-columns: 1fr; }
-      #stage-container { height: 450px; }
-    }
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: #07111c; }
+    ::-webkit-scrollbar-thumb { background: #1e3a5f; border-radius: 4px; }
   </style>
 </head>
-<body>
+<body class="min-h-screen w-full flex flex-col items-center justify-between p-2 sm:p-4 cyber-grid">
 
-  <header>
-    <div class="main-logo">YASHU PUDO</div>
-    <div class="center-title">
-      <h1>YASHU PUDO</h1>
-      <p>LJ939 4G SMARTWATCH // 45 PARTS TEARDOWN ARCHITECTURE</p>
-    </div>
-    <div class="top-badge">45 HARDWARE PARTS v2.0</div>
-  </header>
-
-  <div class="dashboard-layout">
-    <div class="side-col">
-      <div class="group-box">
-        <div class="group-hdr">1. मदरबोर्ड के 15 मुख्य पार्ट्स (1–15)</div>
-        <div class="part-list" id="list-g1"></div>
-      </div>
-      <div class="group-box">
-        <div class="group-hdr">2. Left Side (बाईं तरफ) (16–19)</div>
-        <div class="part-list" id="list-g2"></div>
-      </div>
-      <div class="group-box">
-        <div class="group-hdr">3. Right Side (दाईं तरफ) (20–24)</div>
-        <div class="part-list" id="list-g3"></div>
-      </div>
+  <!-- ============================================================== -->
+  <!-- SLIM TOP BAR (NO BIG NAME AT TOP - MOVED TO BOTTOM)            -->
+  <!-- ============================================================== -->
+  <div class="w-full max-w-[1440px] flex items-center justify-between gap-3 py-1.5 px-3 border-b border-[#142e44]/70 bg-[#07111b]/80 backdrop-blur-md rounded-xl mb-3">
+    <div class="flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-[#22e07a] animate-ping"></span>
+      <span class="text-[11px] sm:text-xs font-mono-tech text-[#94a3b8] tracking-wider uppercase">
+        45 HARDWARE PARTS TEARDOWN ARCHITECTURE
+      </span>
     </div>
 
-    <div class="center-stage-col">
-      <div id="stage-container">
-        <canvas id="stage-canvas"></canvas>
-        <div class="hud-tools">
-          <button class="tool-btn active" id="hud-tag" onclick="toggleTags()" title="Tags On/Off">🏷</button>
-          <button class="tool-btn" onclick="zoomView(0.85)" title="Zoom In">🔍+</button>
-          <button class="tool-btn" onclick="zoomView(1.15)" title="Zoom Out">🔍-</button>
-          <button class="tool-btn" onclick="resetView()" title="Reset">↻</button>
-        </div>
+    <div class="flex items-center gap-2">
+      <div class="hidden sm:flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-[#22d3ee]/60 text-[#22d3ee] font-mono-tech text-[10px] font-bold">
+        <span>LJ939 4G SOC</span>
       </div>
-
-      <div class="controls-deck">
-        <button class="action-btn active" id="btn-explode" onclick="toggleExplosion()">💥 Exploded (अलग करें)</button>
-        <button class="action-btn cyan-btn" id="btn-spin" onclick="toggleAutoSpin()">🔄 360° Auto Spin</button>
-        <button class="action-btn active" id="btn-tag-main" onclick="toggleTags()">🏷 टैग्स (Tags)</button>
-        <div class="slider-box">
-          <span>0°</span>
-          <input type="range" id="angle-slider" min="0" max="360" value="25" oninput="manualRotate(this.value)">
-          <span id="deg-label">25°</span>
-        </div>
-        <button class="action-btn" onclick="assembleWatch()">📦 Assembled (जोड़ें)</button>
-      </div>
-    </div>
-
-    <div class="side-col">
-      <div class="group-box">
-        <div class="group-hdr right-hdr">4. ऊपर की तरफ (Top Side) (25–28)</div>
-        <div class="part-list" id="list-g4"></div>
-      </div>
-      <div class="group-box">
-        <div class="group-hdr right-hdr">5. नीचे की तरफ (Bottom Side) (29–33)</div>
-        <div class="part-list" id="list-g5"></div>
-      </div>
-      <div class="group-box">
-        <div class="group-hdr right-hdr">6. घड़ी के अंदर के अन्य पार्ट्स (34–45)</div>
-        <div class="part-list" id="list-g6"></div>
-      </div>
+      <button onclick="downloadMasterImage()" class="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-gradient-to-r from-[#ff9a1f] to-[#ff5500] text-black font-extrabold text-xs shadow-[0_0_12px_rgba(255,154,31,0.4)] hover:brightness-110 active:scale-95 transition-all cursor-pointer">
+        <span>⬇ डाउनलोड फोटो</span>
+      </button>
     </div>
   </div>
 
-  <div class="bottom-status-strip">
-    <div class="lte-box">
-      <div style="font-size:24px; color:var(--cyan)">📶</div>
-      <div class="lte-sig">
-        4G VoLTE
-        <small>SIM LTE ACTIVE</small>
+  <!-- ============================================================== -->
+  <!-- 3-COLUMN COCKPIT (LEFT 3 BOXES, CENTER 3D, RIGHT 3 BOXES)      -->
+  <!-- ============================================================== -->
+  <div class="w-full max-w-[1440px] grid grid-cols-1 lg:grid-cols-12 gap-3 items-start flex-1">
+    
+    <!-- LEFT COLUMN -->
+    <div class="lg:col-span-3 space-y-3">
+      <!-- Box 1: Motherboard (1-15) -->
+      <div class="bg-[#0b1420]/95 border border-[#ff9a1f] rounded-xl p-2.5 shadow-[0_0_15px_rgba(255,154,31,0.15)]">
+        <h3 class="text-xs sm:text-[13px] font-bold text-[#ff9a1f] pb-1.5 mb-1.5 border-b border-[#251e18] flex items-center justify-between">
+          <span>1. मदरबोर्ड के 15 मुख्य पार्ट्स</span>
+          <span class="text-[10px] text-[#94a3b8] font-mono-tech">(1–15)</span>
+        </h3>
+        <div id="list-group-1" class="space-y-1"></div>
+      </div>
+
+      <!-- Box 2: Left Side (16-19) -->
+      <div class="bg-[#0b1420]/95 border border-[#22e07a] rounded-xl p-2.5 shadow-[0_0_15px_rgba(34,224,122,0.15)]">
+        <h3 class="text-xs sm:text-[13px] font-bold text-[#22e07a] pb-1.5 mb-1.5 border-b border-[#142820] flex items-center justify-between">
+          <span>2. Left Side (बाईं तरफ)</span>
+          <span class="text-[10px] text-[#94a3b8] font-mono-tech">(16–19)</span>
+        </h3>
+        <div id="list-group-2" class="space-y-1"></div>
+      </div>
+
+      <!-- Box 3: Right Side (20-24) -->
+      <div class="bg-[#0b1420]/95 border border-[#c084fc] rounded-xl p-2.5 shadow-[0_0_15px_rgba(192,132,252,0.15)]">
+        <h3 class="text-xs sm:text-[13px] font-bold text-[#c084fc] pb-1.5 mb-1.5 border-b border-[#241a2f] flex items-center justify-between">
+          <span>3. Right Side (दाईं तरफ)</span>
+          <span class="text-[10px] text-[#94a3b8] font-mono-tech">(20–24)</span>
+        </h3>
+        <div id="list-group-3" class="space-y-1"></div>
       </div>
     </div>
 
-    <div class="inspector-card">
-      <div class="soc-icon" id="soc-badge">#1</div>
-      <div class="insp-details">
-        <h3 id="info-title">Part #1: CPU / Processor</h3>
-        <p id="info-desc">घड़ी का मुख्य दिमाग - यह 4G LTE नेटवर्क, ऑपरेटिंग सिस्टम, ऐप प्रोसेसिंग और ग्राफिक्स रेंडरिंग को पूरी तरह से संभालता है।</p>
+    <!-- CENTER COLUMN: Realistic & 3D Interactive Stage -->
+    <div class="lg:col-span-6 flex flex-col items-center">
+      <!-- Mode Switcher -->
+      <div class="w-full flex items-center justify-between mb-2 px-1">
+        <div class="flex items-center gap-1.5 bg-[#0b1522] p-1 rounded-xl border border-[#16445b]">
+          <button id="btn-view-realistic" onclick="setViewMode('realistic')" class="px-3 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 bg-gradient-to-r from-[#ff9a1f] to-[#ff6600] text-black shadow-md cursor-pointer">
+            <span>📸 Realistic Master View</span>
+          </button>
+          <button id="btn-view-3d" onclick="setViewMode('three3d')" class="px-3 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 text-[#94a3b8] hover:text-white cursor-pointer">
+            <span>🌐 3D Interactive Orbit</span>
+          </button>
+        </div>
+
+        <button onclick="downloadMasterImage()" class="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#0e1d2e] border border-[#ff9a1f]/60 text-[#ff9a1f] text-xs font-bold hover:bg-[#152e47] transition-all cursor-pointer">
+          <span>✨ 4K पोस्टर फोटो</span>
+        </button>
+      </div>
+
+      <!-- View Containers -->
+      <div class="w-full relative rounded-2xl overflow-hidden border border-[#16445b] bg-[#070e17] shadow-[0_0_35px_rgba(0,234,255,0.15)] aspect-[4/3] sm:aspect-[16/10] flex items-center justify-center">
+        <!-- Realistic Master View -->
+        <div id="realistic-container" class="absolute inset-0 flex items-center justify-center p-2 bg-[#050b12]">
+          <img src="/assets/aistudio/YASHU_PUDO_Neon_Smartwatch_Teardown_620ffbde.png" alt="YASHU PUDO 45 Parts Teardown" class="w-full h-full object-contain filter drop-shadow-[0_0_20px_rgba(255,85,0,0.3)]" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1000&q=80';" />
+          <div class="absolute bottom-3 left-3 bg-[#06101c]/90 border border-[#22d3ee]/40 rounded-lg px-3 py-1.5 backdrop-blur-md">
+            <span class="text-xs font-bold text-[#22d3ee]">ऑरिजिनल हार्डवेयर मास्टर टीयरडाउन 2.0</span>
+          </div>
+        </div>
+
+        <!-- 3D WebGL Canvas Container -->
+        <div id="three-container" class="absolute inset-0 hidden"></div>
+
+        <!-- 3D Hint -->
+        <div id="three-overlay" class="absolute top-2 left-2 right-2 flex items-center justify-between pointer-events-none hidden">
+          <div class="pointer-events-auto text-[10px] text-[#94a3b8] font-mono-tech bg-[#071320]/80 px-2 py-1 rounded border border-[#183955]">
+            ड्रैग = घुमाएं | स्क्रॉल = ज़ूम | क्लिक = सिलेक्ट
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="w-full mt-2 bg-[#07111b] border border-[#16445b] rounded-xl p-2 flex flex-col gap-2">
+        <div class="flex items-center justify-between gap-2">
+          <button id="btn-explode" onclick="toggleExplode()" class="flex-1 py-1.5 px-3 rounded-lg bg-gradient-to-r from-[#ff5500] to-[#ff9a1f] text-black font-extrabold text-xs shadow-md hover:brightness-110 active:scale-95 transition-all cursor-pointer text-center">
+            💥 Exploded (अलग करें)
+          </button>
+          <button id="btn-spin" onclick="toggleAutoSpin()" class="flex-1 py-1.5 px-3 rounded-lg bg-[#0f2132] border border-[#00eaff]/50 text-[#00eaff] font-bold text-xs hover:bg-[#163047] active:scale-95 transition-all cursor-pointer text-center">
+            🔄 360° Auto Spin
+          </button>
+        </div>
+
+        <div class="flex items-center gap-2 px-1">
+          <span class="text-[10px] text-[#94a3b8] font-mono-tech">0°</span>
+          <input id="slider-explode" type="range" min="0" max="2" step="0.05" value="1" oninput="onExplodeSlider(this.value)" class="flex-1 accent-[#00eaff] h-1.5 bg-[#142838] rounded-lg cursor-pointer">
+          <span class="text-[10px] text-[#94a3b8] font-mono-tech">EXP MAX</span>
+        </div>
       </div>
     </div>
 
-    <div class="footer-crown">
-      <span>SMARTER • FASTER • STRONGER</span>
-      <h2>YASHU <i>PUDO</i> 👑</h2>
+    <!-- RIGHT COLUMN -->
+    <div class="lg:col-span-3 space-y-3">
+      <!-- Box 4: Top Display (25-28) -->
+      <div class="bg-[#0b1420]/95 border border-[#38bdf8] rounded-xl p-2.5 shadow-[0_0_15px_rgba(56,189,248,0.15)]">
+        <h3 class="text-xs sm:text-[13px] font-bold text-[#38bdf8] pb-1.5 mb-1.5 border-b border-[#142636] flex items-center justify-between">
+          <span>4. ऊपर की तरफ (Top Side)</span>
+          <span class="text-[10px] text-[#94a3b8] font-mono-tech">(25–28)</span>
+        </h3>
+        <div id="list-group-4" class="space-y-1"></div>
+      </div>
+
+      <!-- Box 5: Bottom Sensors (29-33) -->
+      <div class="bg-[#0b1420]/95 border border-[#22d3ee] rounded-xl p-2.5 shadow-[0_0_15px_rgba(34,211,238,0.15)]">
+        <h3 class="text-xs sm:text-[13px] font-bold text-[#22d3ee] pb-1.5 mb-1.5 border-b border-[#132c38] flex items-center justify-between">
+          <span>5. नीचे की तरफ (Bottom Side)</span>
+          <span class="text-[10px] text-[#94a3b8] font-mono-tech">(29–33)</span>
+        </h3>
+        <div id="list-group-5" class="space-y-1"></div>
+      </div>
+
+      <!-- Box 6: Internal (34-45) -->
+      <div class="bg-[#0b1420]/95 border border-[#fbbf24] rounded-xl p-2.5 shadow-[0_0_15px_rgba(251,191,36,0.15)]">
+        <h3 class="text-xs sm:text-[13px] font-bold text-[#fbbf24] pb-1.5 mb-1.5 border-b border-[#2b2512] flex items-center justify-between">
+          <span>6. घड़ी के अंदर के अन्य पार्ट्स</span>
+          <span class="text-[10px] text-[#94a3b8] font-mono-tech">(34–45)</span>
+        </h3>
+        <div id="list-group-6" class="space-y-1"></div>
+      </div>
     </div>
+
   </div>
 
+  <!-- ============================================================== -->
+  <!-- BOTTOM FOOTER SECTION (PROMINENT YASHU PUDO NAME - NICHE SIDE) -->
+  <!-- ============================================================== -->
+  <footer class="w-full max-w-[1440px] mt-4 space-y-3">
+    <!-- Row 1: 4G VoLTE & Part Specs -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+      <div class="md:col-span-3 flex items-center gap-3 bg-[#07111c] border border-[#143248] rounded-2xl p-3">
+        <div class="text-center font-black tracking-wider">
+          <div class="text-[#00eaff] text-xl font-orbitron leading-none">4G</div>
+          <div class="text-[10px] text-[#00eaff] font-mono-tech mt-0.5">VoLTE</div>
+        </div>
+        <div class="flex items-end gap-1 h-8">
+          <span class="w-1.5 h-3 bg-[#00eaff] rounded-xs"></span>
+          <span class="w-1.5 h-4.5 bg-[#00eaff] rounded-xs"></span>
+          <span class="w-1.5 h-6 bg-[#00eaff] rounded-xs"></span>
+          <span class="w-1.5 h-7.5 bg-[#00eaff] rounded-xs animate-pulse"></span>
+        </div>
+        <div class="text-[11px] text-[#94a3b8] font-mono-tech leading-tight ml-1">
+          HIGH-SPEED<br />CONNECTIVITY
+        </div>
+      </div>
+
+      <div class="md:col-span-9 flex items-center gap-3 bg-[#07111c] border border-[#22d3ee]/60 rounded-2xl p-3 shadow-[0_0_20px_rgba(34,211,238,0.15)] relative overflow-hidden">
+        <div class="relative shrink-0 w-16 h-16 rounded-xl bg-[#0e1610] border-2 border-[#fbbf24] shadow-[0_0_15px_rgba(251,191,36,0.5)] flex flex-col items-center justify-center">
+          <div class="text-white font-extrabold text-[12px] font-orbitron leading-tight">LJ939</div>
+          <div class="text-[#fbbf24] text-[9px] font-mono-tech font-bold">4G SOC</div>
+        </div>
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center justify-between">
+            <h4 id="active-part-title" class="text-sm sm:text-base font-bold text-[#22d3ee] truncate">
+              Part #1: CPU / Processor (सीपीयू / मुख्य प्रोसेसर)
+            </h4>
+            <button onclick="copySpecs()" class="text-[10px] text-[#94a3b8] hover:text-[#22d3ee] flex items-center gap-1 cursor-pointer">
+              <span id="copy-btn-text">📋 कॉपी</span>
+            </button>
+          </div>
+          <p id="active-part-desc" class="text-xs sm:text-[13px] text-[#cbd5e1] leading-snug line-clamp-2 mt-0.5">
+            घड़ी का मुख्य प्रोसेसर जो सभी ऐप्स, 4G डेटा और सिस्टम फंक्शन्स को कंट्रोल करता है।
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2: YASHU PUDO MAIN TITLE (NICHE SIDE) -->
+    <div class="w-full p-4 rounded-2xl bg-gradient-to-r from-[#07111b] via-[#0d1e30] to-[#07111b] border-2 border-[#ff9a1f]/50 shadow-[0_0_30px_rgba(255,154,31,0.2)] flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="px-4 py-2 rounded-xl bg-[#0b1624] border-2 border-[#ff5500] text-base sm:text-lg font-black tracking-wider text-white shadow-[0_0_15px_rgba(255,85,0,0.3)]">
+          YASHU <span className="text-[#ff5500]">PUDO</span>
+        </div>
+        <div class="hidden sm:flex flex-col text-[11px] text-[#94a3b8] font-mono-tech leading-tight border-l border-[#1d3c58] pl-3">
+          <span class="font-bold text-white flex items-center gap-1">
+            SMARTER • FASTER • STRONGER 👑
+          </span>
+          <span class="text-[#22d3ee] font-semibold">45 HARDWARE PARTS v2.0</span>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-black italic tracking-widest text-white leading-none">
+          YASHU <span class="text-[#ffa31a] not-italic">PUDO</span>
+        </h2>
+        <p class="text-xs sm:text-sm text-[#94a3b8] font-mono-tech tracking-wider mt-1.5 uppercase font-semibold">
+          LJ939 4G SMARTWATCH // 45 PARTS TEARDOWN ARCHITECTURE
+        </p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button onclick="downloadMasterImage()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#ff9a1f] to-[#ff5500] text-black font-black text-xs sm:text-sm shadow-[0_0_20px_rgba(255,154,31,0.5)] hover:brightness-110 active:scale-95 transition-all cursor-pointer">
+          <span>⬇ डाउनलोड फोटो</span>
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================================== -->
+  <!-- JAVASCRIPT LOGIC (45 PARTS + 3D ENGINE)                        -->
+  <!-- ============================================================== -->
   <script>
-    // Procedural Audio Synthesizer (Zero External File)
-    const AudioEngine = {
-      ctx: null,
-      init() {
-        if (!this.ctx) {
-          const AudioContext = window.AudioContext || window.webkitAudioContext;
-          this.ctx = new AudioContext();
-        }
-        if (this.ctx.state === 'suspended') this.ctx.resume();
-      },
-      playClick() {
-        try {
-          this.init();
-          const osc = this.ctx.createOscillator();
-          const gain = this.ctx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(900, this.ctx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(1600, this.ctx.currentTime + 0.05);
-          gain.gain.setValueAtTime(0.18, this.ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.05);
-          osc.connect(gain);
-          gain.connect(this.ctx.destination);
-          osc.start();
-          osc.stop(this.ctx.currentTime + 0.05);
-        } catch(e) {}
-      },
-      playVibe() {
-        try {
-          this.init();
-          const osc = this.ctx.createOscillator();
-          const gain = this.ctx.createGain();
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(140, this.ctx.currentTime);
-          gain.gain.setValueAtTime(0.25, this.ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.15);
-          osc.connect(gain);
-          gain.connect(this.ctx.destination);
-          osc.start();
-          osc.stop(this.ctx.currentTime + 0.15);
-        } catch(e) {}
-      }
-    };
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playBeep(freq, type = 'sine', duration = 0.08) {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    }
 
-    // 45 Hardware Parts Catalog
-    const partsData = [
-      { id: 1, g: 1, name: "CPU / Processor", role: "घड़ी का दिमाग", desc: "LJ939 Quad-Core 4G नेटवर्क और Android OS चिपसेट।" },
-      { id: 2, g: 1, name: "RAM IC", role: "ऐप चलाने की मेमोरी", desc: "मल्टीटास्किंग और ऐप्स के स्मूथ परफॉर्मेंस के लिए LPDDR RAM।" },
-      { id: 3, g: 1, name: "ROM / Flash IC", role: "डेटा और स्टोरेज", desc: "सिस्टम फाइल्स और डेटा के लिए 64GB स्टोरेज चिप।" },
-      { id: 4, g: 1, name: "4G LTE Modem IC", role: "4G नेटवर्क", desc: "हाई-स्पीड इंटरनेट और VoLTE कॉलिंग चिपसेट।" },
-      { id: 5, g: 1, name: "RF Antenna Circuit", role: "सिग्नल सर्किट", desc: "रेडियो सिग्नल फिल्टरिंग और एंटीना ट्यूनर लाइन।" },
-      { id: 6, g: 1, name: "SIM Connector", role: "SIM पिन", desc: "नैनो-सिम कार्ड कनेक्टर सॉकेट।" },
-      { id: 7, g: 1, name: "PMIC (Power IC)", role: "पावर कंट्रोल", desc: "पावर मैनेजमेंट वोल्टेज कंट्रोलर चिप।" },
-      { id: 8, g: 1, name: "Audio IC / Amp", role: "आवाज़", desc: "लाउड कॉलिंग व मीडिया साउंड एम्पलीफायर चिप।" },
-      { id: 9, g: 1, name: "Charging IC", role: "चार्जिंग", desc: "बैटरी सेफ चार्जिंग सर्किट रेगुलेटर।" },
-      { id: 10, g: 1, name: "Display Connector", role: "स्क्रीन सॉकेट", desc: "डिस्प्ले FPC कनेक्टर क्लिप।" },
-      { id: 11, g: 1, name: "Touch Controller IC", role: "टच आईसी", desc: "टच इनपुट प्रोसेसिंग चिपसेट।" },
-      { id: 12, g: 1, name: "Camera Connector", role: "कैमरा सॉकेट", desc: "रोटेटिंग कैमरा मॉड्यूल का फ्लेक्स कनेक्टर।" },
-      { id: 13, g: 1, name: "Sensor IC", role: "सेंसर", desc: "मोशन और स्टेप्स ट्रैकिंग 6-एक्सिस चिप।" },
-      { id: 14, g: 1, name: "Battery Connector", role: "बैटरी टर्मिनल", desc: "3.8V लिथियम पावर इनपुट टर्मिनल्स।" },
-      { id: 15, g: 1, name: "Microphone Circuit", role: "माइक सर्किट", desc: "नॉइज़-फ्री डिजिटल वॉइस फिल्टर सर्किट।" },
+    const PARTS_DATA = [
+      { num: 1, group: 'mb', name: 'CPU / Processor', nameHi: 'सीपीयू / मुख्य प्रोसेसर', descHi: 'घड़ी का मुख्य प्रोसेसर जो सभी ऐप्स, 4G डेटा और सिस्टम फंक्शन्स को कंट्रोल करता है।' },
+      { num: 2, group: 'mb', name: 'RAM IC', nameHi: 'रैम आईसी', descHi: 'मल्टीटास्किंग और बैकग्राउंड ऐप्स को स्मूथली चलाने के लिए LPDDR RAM चिप।' },
+      { num: 3, group: 'mb', name: 'ROM / Flash IC', nameHi: 'रॉम / फ्लैश आईसी', descHi: 'सिस्टम फाइल्स, Android OS और डाउनलोड किए गए मीडिया को स्टोर करने वाली स्टोरेज चिप।' },
+      { num: 4, group: 'mb', name: '4G LTE Modem IC', nameHi: '4जी मॉडेम आईसी', descHi: 'हाई-स्पीड 4G LTE डेटा ट्रांसमिशन और VoLTE कॉलिंग चिपसेट।' },
+      { num: 5, group: 'mb', name: 'RF Antenna Circuit', nameHi: 'आरएफ एंटीना सर्किट', descHi: 'नेटवर्क टावर से रेडियो फ्रीक्वेंसी सिग्नल्स को रिसीव और बूस्ट करने वाला सर्किट।' },
+      { num: 6, group: 'mb', name: 'SIM Connector', nameHi: 'सिम कनेक्टर', descHi: 'नैनो-सिम कार्ड के 6 गोल्ड पिन कॉन्टैक्ट्स को मदरबोर्ड से जोड़ने वाला कनेक्टर।' },
+      { num: 7, group: 'mb', name: 'PMIC Power IC', nameHi: 'पीएमआईसी पावर आईसी', descHi: 'पावर मैनेजमेंट चिप जो बैटरी वोल्टेज को सीपीयू, डिस्प्ले और सेंसर में सही मात्रा में बांटती है।' },
+      { num: 8, group: 'mb', name: 'Audio IC / Amplifier', nameHi: 'ऑडियो आईसी / एम्पलीफायर', descHi: 'क्लियर और लाउड कॉलिंग व म्यूजिक के लिए ऑडियो सिग्नल एम्पलीफायर।' },
+      { num: 9, group: 'mb', name: 'Charging IC', nameHi: 'चार्जिंग आईसी', descHi: 'मैग्नेटिक चार्जिंग पिन से पावर लेकर बैटरी को सेफ चार्जिंग साइकिल प्रदान करने वाली चिप।' },
+      { num: 10, group: 'mb', name: 'Display Connector', nameHi: 'डिस्प्ले कनेक्टर', descHi: 'स्क्रीन की FPC रिबन केबल को मदरबोर्ड से जोड़ने वाला सॉकेट।' },
+      { num: 11, group: 'mb', name: 'Touch Controller IC', nameHi: 'टच कंट्रोलर आईसी', descHi: 'टचस्क्रीन पर उंगलियों के जेस्चर और टच इनपुट को प्रोसेस करने वाली आईसी।' },
+      { num: 12, group: 'mb', name: 'Camera Connector', nameHi: 'कैमरा कनेक्टर', descHi: 'रोटेटिंग कैमरा मॉड्यूल को डेटा बस से जोड़ने वाला फ्लेक्स सॉकेट।' },
+      { num: 13, group: 'mb', name: 'Sensor IC', nameHi: 'सेंसर आईसी', descHi: 'एक्सेलेरोमीटर, पेडोमीटर और स्टेप काउंटिंग डेटा को प्रोसेस करने वाली सेंसर चिप।' },
+      { num: 14, group: 'mb', name: 'Battery Connector', nameHi: 'बैटरी कनेक्टर', descHi: '3.8V लिथियम बैटरी के पॉजिटिव और नेगेटिव टर्मिनल्स का मदरबोर्ड पॉइंट।' },
+      { num: 15, group: 'mb', name: 'Microphone Circuit', nameHi: 'माइक्रोफोन सर्किट', descHi: 'कॉलिंग और ऑडियो रिकॉर्डिंग के लिए लो-नॉइज़ माइक फिल्टर सर्किट।' },
 
-      { id: 16, g: 2, name: "Speaker 🔊", role: "स्पीकर यूनिट", desc: "बाएं फ्रेम में लगा लाउड एकॉस्टिक स्पीकर।" },
-      { id: 17, g: 2, name: "SIM Card Slot", role: "सिम ट्रे", desc: "बाईं तरफ लगा इजेक्टेबल नैनो-सिम स्लॉट।" },
-      { id: 18, g: 2, name: "Speaker Mesh", role: "जाली", desc: "डस्ट और वॉटर प्रोटेक्शन स्टील मेश।" },
-      { id: 19, g: 2, name: "Speaker Connection", role: "वायरिंग", desc: "स्पीकर वॉइस कॉइल केबल लाइन।" },
+      { num: 16, group: 'left', name: 'Speaker', nameHi: 'स्पीकर', descHi: 'कॉल और मीडिया प्लेबैक के लिए लाउड एकॉस्टिक स्पीकर यूनिट।' },
+      { num: 17, group: 'left', name: 'SIM Card Slot', nameHi: 'सिम कार्ड स्लॉट', descHi: 'घड़ी के बाईं तरफ लगा नैनो-सिम कार्ड ट्रे इंसर्शन स्लॉट।' },
+      { num: 18, group: 'left', name: 'Speaker Mesh', nameHi: 'स्पीकर मेश / जाली', descHi: 'स्पीकर चैंबर को धूल और पानी की बूंदों से बचाने वाली मेटल मेश।' },
+      { num: 19, group: 'left', name: 'Speaker Connection', nameHi: 'स्पीकर कनेक्शन', descHi: 'मदरबोर्ड के ऑडियो एम्पलीफायर से स्पीकर कॉइल तक की वायरिंग लाइन।' },
 
-      { id: 20, g: 3, name: "Power Button 🔘", role: "रोटरी क्राउन", desc: "ऑरेंज एनोडाइज्ड रोटरी क्राउन बटन।" },
-      { id: 21, g: 3, name: "Microphone 🎤", role: "माइक पोर्ट", desc: "दाईं तरफ लगा वॉइस इनपुट माइक।" },
-      { id: 22, g: 3, name: "Camera 📷", role: "HD रोटेटिंग कैमरा", desc: "180° फ्लिप और रोटेशन लेंस मॉड्यूल।" },
-      { id: 23, g: 3, name: "Button Flex", role: "केबल", desc: "पावर बटन फ्लेक्स रिबन लाइन।" },
-      { id: 24, g: 3, name: "Camera Flex", role: "डेटा केबल", desc: "हाई-स्पीड इमेज सिग्नल्स रिबन केबल।" },
+      { num: 20, group: 'right', name: 'Power Button / Crown', nameHi: 'पावर बटन / क्राउन', descHi: 'स्क्रीन वेक-अप और डिवाइस पावर ऑन/ऑफ के लिए मेटल रोटरी क्राउन बटन।' },
+      { num: 21, group: 'right', name: 'Microphone', nameHi: 'माइक्रोफोन', descHi: 'दाईं तरफ लगा माइक्रोफोन इनपुट पोर्ट जो आवाज़ कैप्चर करता है।' },
+      { num: 22, group: 'right', name: 'Camera', nameHi: 'कैमरा', descHi: '180° फ्लिप मैकेनिज़्म वाला एचडी कैमरा लेंस।' },
+      { num: 23, group: 'right', name: 'Button Flex Cable', nameHi: 'बटन फ्लेक्स केबल', descHi: 'पावर बटन क्लिक्स को मदरबोर्ड तक भेजने वाली रिबन केबल।' },
+      { num: 24, group: 'right', name: 'Camera Flex Cable', nameHi: 'कैमरा फ्लेक्स केबल', descHi: 'कैमरे के इमेज सिग्नल्स को मदरबोर्ड प्रोसेसर तक ले जाने वाली फ्लेक्स केबल।' },
 
-      { id: 25, g: 4, name: "Display Screen", role: "2.02\" AMOLED", desc: "वाइब्रेंट कलर्स और हाई-ब्राइटनेस AMOLED पैनल।" },
-      { id: 26, g: 4, name: "Display Glass", role: "सफायर ग्लास", desc: "कर्व्ड स्क्रैच-रेसिस्टेंट प्रोटेक्शन ग्लास।" },
-      { id: 27, g: 4, name: "Touch Panel", role: "कैपेसिटिव टच", desc: "स्मूथ टच जेस्चर डिजिटाइज़र लेयर।" },
-      { id: 28, g: 4, name: "Display Flex Cable", role: "रिबन", desc: "स्क्रीन डिस्प्ले FPC मुख्य रिबन।" },
-
-      { id: 29, g: 5, name: "Heart Rate Sensor", role: "हार्ट रेट", desc: "ऑप्टिकल PPG पल्स रेट सेंसर।" },
-      { id: 30, g: 5, name: "SpO2 Sensor", role: "ब्लड ऑक्सीजन", desc: "ब्लड ऑक्सीजन सैचुरेशन मॉनिटर।" },
-      { id: 31, g: 5, name: "Sensor LED", role: "ग्रीन/रेड LED", desc: "त्वचा के नीचे ब्लड फ्लो पढ़ने वाली ड्यूल LED।" },
-      { id: 32, g: 5, name: "Sensor Receiver", role: "फोटोडायोड", desc: "लाइट सिग्नल्स डिटेक्ट करने वाला रिसीवर।" },
-      { id: 33, g: 5, name: "Charging Contacts", role: "पिन (••••)", desc: "मैग्नेटिक 4-पॉइंट गोल्ड प्लेटेड चार्जिंग डॉक।" },
-
-      { id: 34, g: 6, name: "Rechargeable Battery", role: "1000mAh बैटरी", desc: "3.8V हाई-बैकअप लिथियम पॉलीमर सेल।" },
-      { id: 35, g: 6, name: "Vibration Motor", role: "हैप्टिक मोटर", desc: "कॉल और नोटिफिकेशन वाइब्रेशन देने वाली गोल मोटर।" },
-      { id: 36, g: 6, name: "4G Antenna", role: "सेलुलर एंटीना", desc: "फ्रेम पर माउंटेड 4G VoLTE सेलुलर एंटीना।" },
-      { id: 37, g: 6, name: "Wi-Fi / BT Antenna", role: "वायरलेस एंटीना", desc: "2.4GHz वाई-फाई और ब्लूटूथ एंटीना।" },
-      { id: 38, g: 6, name: "GPS Antenna", role: "नेविगेशन", desc: "लाइव सैटेलाइट लोकेशन ट्रेसिंग एंटीना।" },
-      { id: 39, g: 6, name: "Internal PCB", role: "मदरबोर्ड", desc: "मेन हरा मल्टी-लेयर सर्किट बोर्ड।" },
-      { id: 40, g: 6, name: "Crystal Oscillator", role: "क्लॉक क्रिस्टल", desc: "सिस्टम टाइमिंग नियंत्रित करने वाला 32.768kHz क्रिस्टल।" },
-      { id: 41, g: 6, name: "Capacitors", role: "वोल्टेज स्मूथिंग", desc: "करंट के उतार-चढ़ाव को फिल्टर करने वाले SMD कैपेसिटर्स।" },
-      { id: 42, g: 6, name: "Resistors", role: "करंट कंट्रोल", desc: "सेंसर और चिप्स में करंट लिमिट करने वाले रेसिस्टर्स।" },
-      { id: 43, g: 6, name: "Inductors", role: "पावर फिल्टर", desc: "पावर लाइन में इलेक्ट्रोमैग्नेटिक नॉइज़ फिल्टर कॉइल्स।" },
-      { id: 44, g: 6, name: "Connectors", role: "सॉकेट्स", desc: "फ्लेक्स केबल्स को लॉक करने वाले BTB क्लिप्स।" },
-      { id: 45, g: 6, name: "Power Switch Circuit", role: "सेफ्टी सर्किट", desc: "ओवर-वोल्टेज और बैटरी इमरजेंसी सेफ्टी स्विच।" }
-    ];
-
-    function populateLists() {
-      const gMap = { 1: 'list-g1', 2: 'list-g2', 3: 'list-g3', 4: 'list-g4', 5: 'list-g5', 6: 'list-g6' };
-      pa
+      { num: 25, group: 'top', name: 'Display Screen', nameHi: 'डिस्प्ले स्क्रीन', descHi: '2.02-इंच हाई-रेज़ोल्यूशन वाइब्रेंट डिस्प्ले पैनल।' },
+      { num: 26, group: 'top', name: 'Display
